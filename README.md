@@ -6,4 +6,4 @@
 
 3. Abrir la terminal desde el directorio correspondiente y escribir make
 
-4. Por ultimo ejecutarlo ./projecto
+4. Por ultimo ejecutarlo ./proyecto
