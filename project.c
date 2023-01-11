@@ -10,9 +10,20 @@ struct Node {
 
 // Función para obtener el XOR de dos direcciones
 struct Node* XOR (struct Node* prev, struct Node* next) {
+    //Se coloca como variable intptr_t un entero apuntador, parecido al long int
     return (struct Node*) ((intptr_t) (prev) ^ (intptr_t) (next));
 }
 
+struct Node* list;
+
+//Creacion de la lista
+struct Node* CreateList(){
+
+    return NULL;
+
+}
+
+//Funcion que inicializa la lista
 struct Node* Inicializar(struct Node* list){
 
     list = malloc(sizeof(struct Node));
@@ -33,6 +44,8 @@ int is_empty(struct Node *list){
 }
 
 void insertaralprincipio(struct Node** list, int value) {
+    
+    //Creacion de un nuevo nodo
     struct Node* newNode = malloc(sizeof(struct Node));
     if (newNode == NULL) {
         perror("Error al reservar memoria para el nuevo nodo");
@@ -42,6 +55,7 @@ void insertaralprincipio(struct Node** list, int value) {
     newNode->data = value;
     newNode->ptr = XOR(NULL, *list);
 
+    //Si la lista apunta a un elemento existente, se actualiza el puntero e inserta al principio
     if (*list != NULL) {
         (*list)->ptr = XOR(newNode, (*list)->ptr);
     }
@@ -59,11 +73,13 @@ void insertaralfinal(struct Node** list, int data) {
     newNode->data = data;
     newNode->ptr = XOR(NULL, NULL);
 
+    //Si la lista apunta a vacio la lista apuntara hacia el nuevo nodo
     if (*list == NULL) {
         *list = newNode;
         return;
     }
 
+    // En caso contrario recorre toda la lista hasta el final y lo inserta
     struct Node* act = *list;
     struct Node* prev = NULL;
     struct Node* next;
@@ -97,23 +113,28 @@ void insertarordenado(struct Node** list, int data) {
     struct Node* prev = NULL;
     struct Node* next;
 
+    //En este caso la lista se recorre hasta que act sea distinto de NULL y que el elemento sea menor que el dato dado
     while((act != NULL) && (act->data <= data)) {
         next = XOR(prev, act->ptr);
         prev = act;
         act = next;
     }
 
+    //Si la lista es iigual al act entonce el elemento va ser insertado de primero
     if(*list == act){
 
         *list = newNode;
 
     }
+    //En caso de no serlo
     else
     {
       
         prev->ptr = XOR(newNode, prev->ptr);   
 
     }
+
+    //Se realizan distintas operaciones con XOR para actualizar los punteros
     newNode->ptr = XOR(prev, act);
     if (act != NULL) {
         act->ptr = XOR(newNode, act->ptr);
@@ -126,6 +147,7 @@ int buscarelemento(struct Node* list, int value) {
     struct Node* prev = NULL;
     struct Node* next;
 
+    //Se busca el elemento
     while (act != NULL) {
         if (act->data == value) {
             // El valor se ha encontrado en la lista
@@ -149,17 +171,16 @@ int sacarprincipio(struct Node** list) {
         return -1;
     }
 
-    // Store the node to be deleted
+    // Se almacena el nodo a borrar
     struct Node* aux_delete = *list;
 
-    // Update the head pointer
+    // Se actualiza la cabecera
     *list = XOR(NULL, aux_delete->ptr);
 
-    // When the linked list
-    // contains only one node
+    // En caso de que la lista solo contenga un nodo
     if (*list != NULL) {
 
-        // Update head node address
+        // Se actualiza la direccion de la cabeza
         (*list)->ptr = XOR(NULL, XOR(aux_delete,(*list)->ptr));
 
     }
@@ -181,34 +202,32 @@ int sacarfinal(struct Node** list) {
     struct Node* prev = NULL;
     struct Node* next;
 
-    // Traverse XOR linked list
+    // Se recorre la lista
     while (XOR(act->ptr, prev) != NULL){
 
-    // Forward traversal
+    // Se recorre haciia adelante
         next = XOR(prev, act->ptr);
 
-    // Update prev
+    // Se actualiza prev
         prev = act;
 
-    // Update act
+    // Se actualiza act
         act = next;
     }
 
-    // If the Linked List contains more than 1 node
+    // Si la lista contiene mas de un nodo
     
     if (prev != NULL)
         prev->ptr = XOR(XOR(prev->ptr, act), NULL);
 
-    // Otherwise
+    // Caso contrario
     else
         *list = NULL;
 
      printf("El ultimo elemento con numero: %d ha sido eliminado",act->data);
-    // Delete the last node from memory
+    // Elimina el ultimo nodo de la lista
     free(act);
-    
-   
-    // Devolver el elemento eliminado
+
     return 0;
 }
 
@@ -239,6 +258,7 @@ int sacarprimeraocurrencia(struct Node** list, int data) {
         return -1;
     }
 
+    //En caso de que el elemento sea el primero de la lista
     if (prev == NULL) {
     
         *list = XOR(NULL, act->ptr);
@@ -246,6 +266,8 @@ int sacarprimeraocurrencia(struct Node** list, int data) {
         free(act);
 
     }
+
+    //Caso contrario
     else {
     
         
@@ -283,13 +305,14 @@ void printList (struct Node** list) {
     }
 }
 
-// Function to reverse the XOR linked list
+// Funcion paara invertir la lista
 struct Node* reverseList(struct Node** list)
 {
     struct Node* act = *list;
     struct Node* prev = NULL;
     struct Node* next;
 
+    //Se recorre la lista hasta el final
     while (XOR(prev, act->ptr) != NULL) {
 
           
@@ -302,6 +325,7 @@ struct Node* reverseList(struct Node** list)
         act = next;
     }
 
+    // Se invierte el orden en donde apunta la lista
     *list = act;
     return *list;
 }
@@ -329,8 +353,7 @@ int cantidadElementos(struct Node* list) {
 
 int main() {
     
-    
-    struct Node* list = NULL;
+    CreateList();
     int option, value, reverse = 0;
     
     do
